@@ -62,7 +62,7 @@ systemctl start logstash.service
 ```bash
 rpm -vi https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.9.1-i686.rpm
 ```
-Включаем поддержку nginx в filebeat
+Включаем поддержку apache в filebeat
 ```bash
 filebeat modules enable nginx apache
 ```
