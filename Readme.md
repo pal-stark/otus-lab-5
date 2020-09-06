@@ -18,7 +18,9 @@ yum install -y java
 rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch
 ```
 Копируем прилагаемый файл [elastiksearch.repo](templates%2Felasticsearch.repo) в /etc/yum.repos.d
+
 Копируем прилагаемый файл [kibana.repo](templates%2Fkibana.repo) в /etc/yum.repos.d
+
 Устанавливаем необходимые пакеты
 ```bash
 yum install -y elasticsearch kibana logstash
