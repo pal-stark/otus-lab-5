@@ -88,10 +88,11 @@ systemctl start filebeat
 ```
 Идём на машину с ELK на порт 5601 и смотрим что происходит.  
 В секции Data -> Index Management кликаем на Reload indicies и в списке должны увидеть новый индекс, который описали выше httpd-YYYY.MM.DD.
-Скриншот 
+
+# Скриншот 
 ![](result/Screenshot_31.png)
 
-Смотрим что получаем.
+# Смотрим что получаем.
 
 ![](result/Screenshot_32.png)
 
