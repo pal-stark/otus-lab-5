@@ -1,4 +1,5 @@
-Установка ELK
+# Домашнее задание.  
+## Установка ELK
 
 Для установки используем свежую копию виртуальной машины под управлением Centos 7.4  
 Все действия выполняем от суперпользователя root либо через sudo su.
@@ -12,11 +13,12 @@ yum update -y
 yum install -y java
 ```
 
-Импортируем подпись в систему
+Импортируем подпись репозитория logstash в систему
 ```bash
 rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch
 ```
-Копируем прилагаемый файл [lastiksearch.repo](templates%2Felasticsearch.repo) в /etc/yum.repos.d
+Копируем прилагаемый файл [elastiksearch.repo](templates%2Felasticsearch.repo) в /etc/yum.repos.d
+Копируем прилагаемый файл [kibana.repo](templates%2Fkibana.repo) в /etc/yum.repos.d
 Устанавливаем необходимые пакеты
 ```bash
 yum install -y elasticsearch kibana logstash
@@ -72,6 +74,11 @@ filebeat modules enable apache
 Редактируем  /etc/filebeat/modules.d/apache.yml
 Меняем в секции access: var.path: на путь который указывает логи apache.
 В моём случае /var/log/httpd/domains/*.log
+Инициализируем хранилища filebeat 
+```bash
+filebeat setup
+```
+
 Настраиваем автозапуск filebeat и стартуем его.
 ```bash
 systemctl enabls filebeat
