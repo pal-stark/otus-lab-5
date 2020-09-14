@@ -1,5 +1,7 @@
 # Домашнее задание.  
 ## Установка ELK
+Цель: Для успешного выполнения ДЗ вам необходимо установить ELK (elasticsearch, logstash, kibana). Базовая операционная система - по вашему выбору. После успешной установки ELK-стека вам необходимо настроить отправку логов sshd в elasticsearch через logstash. Для этого вам придется изменить настройку rsyslog. Проверьте создался ли index в elasticsearch. После настройки отправки логов в ELK попробуйте настроить визуализацию логов от sshd в kibana. В качестве результата ДЗ принимается: конфиг rsyslog, конфиг logstash и результат проверки index в elasticsearch, а также скриншот из kibana, если получилось настроить визуализацию.
+
 
 Для установки используем свежую копию виртуальной машины под управлением Centos 7.4  
 Все действия выполняем от суперпользователя root либо через sudo su.
@@ -95,6 +97,59 @@ systemctl start filebeat
 # Смотрим что получаем.
 
 ![](result/Screenshot_32.png)
+
+# Добавляем логирование sshd с удалённой машины в установленный экземпляр.
+Для этого сначала добавим на установленном экземпляре elk добавим входящий поток logstash.
+Редактируем /etc/logstash/conf.d/rsyslog.conf
+
+Содержимое:
+```json
+input {
+    tcp {
+        port => 10514
+        codec => "json"
+        type= => "rsyslog"
+    }
+}
+```
+Редактируем [output.conf](templates%2Foutput.conf)
+```json
+output {
+        elasticsearch {
+            hosts    => "localhost:9200"
+            index    => "rsyslog-%{+YYYY.MM.dd}"
+        }
+        stdout { codec => rubydebug }
+}
+```
+
+Открываем файервал
+```makefile
+firewall-cmd --zone=public --add-port=10514/tcp --permanent
+firewall-cmd --reload
+```
+
+Перезапускаем logstash
+```makefile
+systemctl restart logstash.service
+```
+
+На рабочей машине перенаправим вывод логов sshd в elk.
+
+В файле /etc/rsyslog.d добавим строку
+if $programname == 'sshd' then @@xxx.xxx.xxx.xxx:10514
+
+Перезапускаем rsyslog
+
+```bash
+service rsyslog restart
+```
+
+# Результат логирования
+![](result/Screenshot_35.png)
+
+
+
 
 
 
